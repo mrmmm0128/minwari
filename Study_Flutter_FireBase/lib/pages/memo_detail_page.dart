@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:study_flutter_firebase/pages/show_history_page.dart';
+import 'package:study_flutter_firebase/pages/suggest_next_pay.dart';
 
 class MemoDetailPage extends StatefulWidget {
   final String memoId;
@@ -326,6 +327,24 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
                         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 30),
                       ),
                       child: const Text('清算する'),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => PaymentSuggestionPage(memoId: widget.memoId)),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue.shade300,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                      ),
+                      child: const Text('支払提案'),
                     ),
                   ],
                 ),
