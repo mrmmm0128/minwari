@@ -1,6 +1,6 @@
 {
-    "name": "割り勘アプリ",
-    "short_name": "割り勘アプリ",
+    "name": "study_flutter_firebase",
+    "short_name": "study_flutter_firebase",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

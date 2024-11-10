@@ -3,8 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PaymentSuggestionPage extends StatefulWidget {
   final String memoId;
+  final String collectionName;
 
-  PaymentSuggestionPage({required this.memoId});
+  PaymentSuggestionPage({required this.memoId, required this.collectionName});
 
   @override
   _PaymentSuggestionPageState createState() => _PaymentSuggestionPageState();
@@ -25,7 +26,7 @@ class _PaymentSuggestionPageState extends State<PaymentSuggestionPage> {
   Future<void> _fetchMemoData() async {
     try {
       DocumentSnapshot memoDoc = await FirebaseFirestore.instance
-          .collection('memo')
+          .collection(widget.collectionName)
           .doc(widget.memoId)
           .get();
 

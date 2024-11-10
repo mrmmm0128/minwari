@@ -4,11 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class PaymentHistoryPage extends StatefulWidget {
   final Map<String, List<Map<String, dynamic>>> amounts;
   final String travelId;
+  final String collectionName;
 
   const PaymentHistoryPage({
     Key? key,
     required this.amounts,
     required this.travelId,
+    required this.collectionName,
   }) : super(key: key);
 
   @override
@@ -30,7 +32,7 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
     if (payment != null) {
       try {
         await FirebaseFirestore.instance
-            .collection('memo')
+            .collection(widget.collectionName)
             .doc(widget.travelId)
             .update({
           'amounts.$participant': FieldValue.arrayRemove([payment]),

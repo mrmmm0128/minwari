@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:study_flutter_firebase/firebase_options.dart';
+import 'package:study_flutter_firebase/pages/input_collection.dart';
 import 'package:study_flutter_firebase/pages/top_page.dart';
 
 void main() async{
@@ -16,12 +17,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: "割り立てpay",
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const CollectionInputPage(),
     );
   }
 }

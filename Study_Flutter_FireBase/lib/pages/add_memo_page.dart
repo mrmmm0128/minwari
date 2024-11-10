@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:study_flutter_firebase/pages/top_page.dart';
 
 class AddMemoPage extends StatefulWidget {
-  const AddMemoPage({super.key});
+  const AddMemoPage({super.key, required this.collectionName});
+  final String collectionName;
 
   @override
   State<AddMemoPage> createState() => _AddMemoPageState();
@@ -15,7 +17,7 @@ class _AddMemoPageState extends State<AddMemoPage> {
   ];
 
   Future<void> createMemo() async {
-    final memoCollection = FirebaseFirestore.instance.collection("memo");
+    final memoCollection = FirebaseFirestore.instance.collection(widget.collectionName);
     List<String> participants = participantControllers
         .map((c) => c.text)
         .where((text) => text.isNotEmpty)
@@ -162,7 +164,12 @@ class _AddMemoPageState extends State<AddMemoPage> {
                       return;
                     }
                     await createMemo();
-                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyHomePage(collectionName: widget.collectionName),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue.shade300,

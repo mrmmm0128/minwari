@@ -6,9 +6,10 @@ import 'package:study_flutter_firebase/pages/show_history_page.dart';
 import 'package:study_flutter_firebase/pages/suggest_next_pay.dart';
 
 class MemoDetailPage extends StatefulWidget {
+  const MemoDetailPage({required this.memoId, required this.collectionName, Key? key}) : super(key: key);
   final String memoId;
+  final String collectionName;
 
-  const MemoDetailPage({required this.memoId, Key? key}) : super(key: key);
 
   @override
   _MemoDetailPageState createState() => _MemoDetailPageState();
@@ -31,7 +32,7 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
   Future<void> _fetchMemoData() async {
     try {
       DocumentSnapshot memoDoc = await FirebaseFirestore.instance
-          .collection('memo')
+          .collection(widget.collectionName)
           .doc(widget.memoId)
           .get();
 
@@ -67,7 +68,7 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
 
   Future<void> saveData() async {
     try {
-      DocumentReference memoDocRef = FirebaseFirestore.instance.collection('memo').doc(widget.memoId);
+      DocumentReference memoDocRef = FirebaseFirestore.instance.collection(widget.collectionName).doc(widget.memoId);
       DocumentSnapshot memoDoc = await memoDocRef.get();
 
       // Firestoreから既存の履歴データを取得
@@ -131,6 +132,7 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
       MaterialPageRoute(
         builder: (BuildContext context) {
           return PaymentHistoryPage(
+            collectionName: widget.collectionName,
             amounts: amounts, // ここで既存の amounts を渡します
             travelId: widget.memoId, // memoId を渡す
           );
@@ -333,7 +335,7 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => PaymentSuggestionPage(memoId: widget.memoId)),
+                          MaterialPageRoute(builder: (context) => PaymentSuggestionPage(collectionName: widget.collectionName, memoId: widget.memoId)),
                         );
                       },
                       style: ElevatedButton.styleFrom(
