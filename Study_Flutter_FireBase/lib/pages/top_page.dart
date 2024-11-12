@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:study_flutter_firebase/model/memo.dart';
 import 'package:study_flutter_firebase/pages/add_memo_page.dart';
 import 'package:study_flutter_firebase/pages/memo_detail_page.dart';
-import 'package:study_flutter_firebase/pages/input_collection.dart'; // InputCollectionPageをインポート
-import 'package:intl/intl.dart';
+import 'package:study_flutter_firebase/pages/input_collection.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.collectionName});
@@ -21,7 +22,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    memoCollection = FirebaseFirestore.instance.collection(widget.collectionName);
+    memoCollection =
+        FirebaseFirestore.instance.collection(widget.collectionName);
   }
 
   void _deleteMemo(String id) async {
@@ -29,6 +31,18 @@ class _MyHomePageState extends State<MyHomePage> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('メモを削除しました')),
     );
+  }
+
+  void _getLink(String memoId, String collectionName) async {
+    // メモIDをURLエンコードしてリンクを生成
+    String link = "https://waritate.netlify.app/travel/$collectionName/$memoId";
+
+    // クリップボードにリンクをコピー
+    Clipboard.setData(ClipboardData(text: link)).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("リンクがクリップボードにコピーされました")),
+      );
+    });
   }
 
   @override
@@ -47,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         title: Center(
           child: Text(
-            "割り立てpay",
+            "みんなで割り勘",
             style: TextStyle(
               fontFamily: 'Roboto',
               fontWeight: FontWeight.bold,
@@ -78,7 +92,8 @@ class _MyHomePageState extends State<MyHomePage> {
           return ListView.builder(
             itemCount: docs.length,
             itemBuilder: (context, index) {
-              Map<String, dynamic> data = docs[index].data() as Map<String, dynamic>;
+              Map<String, dynamic> data =
+                  docs[index].data() as Map<String, dynamic>;
               DateTime date = (data["date"] as Timestamp).toDate();
 
               final Memo fetchMemo = Memo(
@@ -88,10 +103,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 participants: List<String>.from(data["participants"]),
               );
 
-              String formattedDate = DateFormat('yyyy年MM月dd日').format(fetchMemo.date);
+              String formattedDate =
+                  DateFormat('yyyy年MM月dd日').format(fetchMemo.date);
 
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Card(
                   elevation: 4,
                   shape: RoundedRectangleBorder(
@@ -100,7 +117,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: ListTile(
                     title: Text(
                       fetchMemo.title,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,8 +142,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
+                          icon: const Icon(Icons.link),
+                          color: Colors.blueAccent,
+                          onPressed: () {
+                            _getLink(fetchMemo.id, widget.collectionName);
+                          },
+                        ),
+                        IconButton(
                           icon: const Icon(Icons.delete),
-                          color: Colors.brown,
+                          color: Colors.red,
                           onPressed: () {
                             showDialog(
                               context: context,
@@ -185,7 +210,10 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: const EdgeInsets.only(left: 35.0), // 左側に余白を追加
             child: FloatingActionButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const CollectionInputPage()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CollectionInputPage()));
               },
               backgroundColor: Colors.blueAccent,
               tooltip: 'Input Collection',
@@ -194,7 +222,12 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           FloatingActionButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AddMemoPage(collectionName: widget.collectionName,)));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddMemoPage(
+                            collectionName: widget.collectionName,
+                          )));
             },
             backgroundColor: Colors.blueAccent,
             tooltip: 'Add Memo',

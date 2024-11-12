@@ -46,7 +46,7 @@ class _AddMemoPageState extends State<AddMemoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("旅行追加"),
+        title: const Text("旅程追加", style: TextStyle(fontFamily: 'Roboto',),),
         backgroundColor: Colors.blue.shade300,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -97,31 +97,46 @@ class _AddMemoPageState extends State<AddMemoPage> {
                 ),
               ),
               const SizedBox(height: 10),
-              ...participantControllers.map((controller) {
+              ...participantControllers.asMap().entries.map((entry) {
+                int index = entry.key;
+                TextEditingController controller = entry.value;
                 return Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: 10, left: 20, right: 20),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.blue.shade100,
-                          blurRadius: 6,
-                          offset: Offset(0, 3),
+                  padding: const EdgeInsets.only(bottom: 10, left: 20, right: 20),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blue.shade100,
+                                blurRadius: 6,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: TextField(
+                            controller: controller,
+                            decoration: const InputDecoration(
+                              hintText: "参加者の名前を入力",
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.symmetric(vertical: 10),
+                            ),
+                          ),
                         ),
-                      ],
-                    ),
-                    child: TextField(
-                      controller: controller,
-                      decoration: const InputDecoration(
-                        hintText: "参加者の名前を入力",
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(vertical: 10),
                       ),
-                    ),
+                      IconButton(
+                        icon: Icon(Icons.remove_circle, color: Colors.red),
+                        onPressed: () {
+                          setState(() {
+                            participantControllers.removeAt(index);
+                          });
+                        },
+                      ),
+                    ],
                   ),
                 );
               }).toList(),
@@ -136,30 +151,24 @@ class _AddMemoPageState extends State<AddMemoPage> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: const Text("参加者を追加"),
+                  child: const Text("参加者を追加", style: TextStyle(fontFamily: "Roboto")),
                 ),
               ),
               const SizedBox(height: 40),
               Container(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.8,
+                width: MediaQuery.of(context).size.width * 0.8,
                 alignment: Alignment.center,
                 child: ElevatedButton(
                   onPressed: () async {
                     if (titleController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('タイトルを入力してください')),
+                        const SnackBar(content: Text('タイトルを入力してください', style: TextStyle(fontFamily: "Roboto"))),
                       );
                       return;
                     }
-                    if (participantControllers.every((controller) =>
-                    controller.text.isEmpty)) {
+                    if (participantControllers.every((controller) => controller.text.isEmpty)) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text(
-                            '少なくとも1人の参加者を入力してください')),
+                        const SnackBar(content: Text('少なくとも1人の参加者を入力してください', style: TextStyle(fontFamily: "Roboto"))),
                       );
                       return;
                     }
@@ -179,7 +188,7 @@ class _AddMemoPageState extends State<AddMemoPage> {
                     ),
                     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
                   ),
-                  child: const Text("追加"),
+                  child: const Text("追加", style: TextStyle(fontFamily: "Roboto")),
                 ),
               ),
             ],
